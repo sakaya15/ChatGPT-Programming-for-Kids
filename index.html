@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChatGPTで学ぶ！小・中学生のためのプログラミング講座</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Hiragino Kaku Gothic ProN','メイリオ',sans-serif; line-height:1.6; color:#333; background:#2c3e50; }
+  .container { max-width:1200px; margin:0 auto; padding:0 20px; }
+
+  /* ===== hero ===== */
+  .hero { position:relative; overflow:hidden; background: linear-gradient(135deg,#4facfe 0%,#00f2fe 100%); color:#fff; padding:120px 0; text-align:center; }
+  .hero::before { content:""; position:absolute; inset:0; background:none !important; animation:float 20s infinite linear; }
+  @keyframes float { 0%{transform:translateY(0)} 50%{transform:translateY(-20px)} 100%{transform:translateY(0)} }
+  .hero h1 { font-size:3.5em; margin-bottom:20px; font-weight:700; text-shadow:2px 2px 4px rgba(0,0,0,.3); animation:fadeInUp 1s ease-out; }
+  .hero p { font-size:1.4em; margin-bottom:30px; animation:fadeInUp 1s ease-out .3s both; }
+  @keyframes fadeInUp { from{opacity:0; transform:translateY(30px)} to{opacity:1; transform:translateY(0)} }
+
+  .cta-button { display:inline-block; background:linear-gradient(45deg,#36d1dc,#5b86e5); color:#fff; padding:14px 28px; text-decoration:none; border-radius:40px; font-size:1.1em; font-weight:700; box-shadow:0 8px 25px rgba(0,0,0,.3); animation:fadeInUp 1s ease-out .6s both; transition: all .45s cubic-bezier(0.19, 1, 0.22, 1); will-change: transform, filter, box-shadow; }
+  .cta-button.near,
+.cta-button:hover,
+.submit-btn:hover { 
+  transform: perspective(800px) translateY(-10px) scale(1.12) rotateX(2deg);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.4), 0 0 15px rgba(255,165,0,0.3);
+  filter: brightness(1.05) saturate(1.3);
+}
+  .cta-button.orange { background:linear-gradient(45deg,#ff9500,#ff7b00)!important; }
+
+  .cta-button.floating { position:fixed; bottom:20px; right:20px; z-index:9999; padding:1em 1.5em; border-radius:999px; font-size:1.1em; box-shadow:0 8px 25px rgba(0,0,0,.3); }
+
+  /* shake-once helper */
+  @keyframes shake { 0%{transform:translate(0,0) rotate(0)} 20%{transform:translate(-2px,2px) rotate(-1deg)} 40%{transform:translate(2px,-2px) rotate(1deg)} 60%{transform:translate(-1px,1px) rotate(0)} 80%{transform:translate(1px,-1px) rotate(1deg)} 100%{transform:translate(0,0) rotate(0)} }
+  .cta-button.shake-once { animation:shake .4s ease-in-out; }
+
+  /* sections */
+  .section { padding:80px 0; background:#fff; }
+  .section:nth-of-type(even) { background:#f8f9fa; }
+  .section h2, .form-section h2 { text-align:center; font-size:2.5em; margin-bottom:50px; color:#2c3e50; position:relative; }
+  .section h2::after, .form-section h2::after { content:""; position:absolute; bottom:-12px; left:50%; transform:translateX(-50%); width:80px; height:4px; background:linear-gradient(90deg,#4facfe 0%,#00f2fe 100%); border-radius:2px; box-shadow:0 2px 8px rgba(79,172,254,.3); }
+
+  .features { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:40px; margin-top:60px; }
+  .feature-card { background:#fff; padding:40px; border-radius:20px; text-align:center; box-shadow:0 8px 25px rgba(79,172,254,.08); border:1px solid rgba(79,172,254,.08); transition:transform .2s ease, box-shadow .2s ease; }
+  .feature-card:hover { transform:translateY(-8px); box-shadow:0 15px 35px rgba(79,172,254,.15); border-color:rgba(79,172,254,.2); }
+  .feature-icon { font-size:3em; margin-bottom:20px; }
+
+  .courses { display:grid; grid-template-columns:repeat(auto-fit,minmax(350px,1fr)); gap:30px; margin-top:60px; }
+  .course-card { background:#fff; border-radius:20px; overflow:hidden; box-shadow:0 10px 30px rgba(79,172,254,.1); border:1px solid rgba(79,172,254,.05); transition:transform .2s ease, box-shadow .2s ease; }
+  .course-card:hover { transform:translateY(-5px); box-shadow:0 20px 40px rgba(79,172,254,.15); }
+  .course-header { background:linear-gradient(45deg,#4facfe,#00f2fe); color:#fff; padding:30px; text-align:center; }
+  .course-body { padding:30px; }
+  .price { font-size:2em; font-weight:700; color:#ff9500; margin:20px 0; position:relative; }
+
+  .limited-offer { background:linear-gradient(135deg,#fff3e0 0%,#ffe0b2 100%); border:2px solid #ff9500; padding:20px; border-radius:15px; margin:20px 0; text-align:center; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.02)} 100%{transform:scale(1)} }
+  .countdown { background:#ff3333; color:#fff; padding:15px 30px; border-radius:50px; display:inline-block; font-size:1.2em; font-weight:700; margin:20px 0; box-shadow:0 5px 15px rgba(255,51,51,.3); }
+
+  .course-features { list-style:none; margin:20px 0; padding-left:0; }
+  .course-features li { padding:10px 0; border-bottom:1px solid #eee; }
+  .course-features li:before { content:"✓"; color:#10b981; font-weight:700; margin-right:10px; }
+
+  .instructor { background:linear-gradient(135deg,#4facfe 0%,#00f2fe 100%); color:#fff; padding:80px 0; text-align:center; }
+  .instructor-info { display:flex; justify-content:center; align-items:center; gap:40px; flex-wrap:wrap; margin-top:40px; }
+  .instructor-avatar { width:150px; height:150px; border-radius:50%; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-size:4em; }
+
+  .form-section { background:#f8f9fa; padding:80px 0; }
+  .contact-form { max-width:600px; margin:0 auto; background:#fff; padding:40px; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.1); }
+  .form-group { margin-bottom:30px; }
+  .form-group label { display:block; margin-bottom:10px; font-weight:700; color:#2c3e50; }
+  .form-group input, .form-group select, .form-group textarea { width:100%; padding:15px; border:2px solid #ddd; border-radius:10px; font-size:1.1em; transition:border-color .3s ease; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline:none; border-color:#4facfe; }
+  .submit-btn { background:linear-gradient(45deg,#4facfe,#00f2fe)!important; color:#fff; padding:15px 30px; border:none; border-radius:50px; font-size:1.2em; font-weight:700; cursor:pointer; width:100%; transition:transform .2s ease, box-shadow .2s ease; }
+  .submit-btn:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,0,0,.2); }
+
+  .testimonials { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:30px; margin-top:60px; }
+  .testimonial-card { background:#fff; padding:30px; border-radius:20px; box-shadow:0 10px 30px rgba(79,172,254,.1); transition:transform .3s ease; border-left:4px solid #4facfe; }
+  .testimonial-card:hover { transform:translateY(-5px); }
+  .testimonial-content { margin-bottom:20px; }
+  .testimonial-content p { font-style:italic; font-size:1.1em; line-height:1.6; color:#2c3e50; }
+  .testimonial-author { display:flex; align-items:center; gap:15px; }
+  .author-avatar { width:50px; height:50px; border-radius:50%; background:linear-gradient(45deg,#4facfe,#00f2fe); display:flex; align-items:center; justify-content:center; font-size:1.5em; flex-shrink:0; }
+  .testimonial-author h4 { margin:0; color:#2c3e50; font-size:1.1em; }
+  .testimonial-author p { margin:5px 0 0 0; color:#666; font-size:.9em; }
+
+  .faq-container { max-width:800px; margin:60px auto 0; }
+  .faq-item { background:#fff; margin-bottom:20px; border-radius:15px; box-shadow:0 5px 15px rgba(0,0,0,.1); overflow:hidden; }
+  .faq-question { padding:25px; background:#f8f9fa; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:background .3s ease; }
+  .faq-question:hover { background:#e9ecef; }
+  .faq-question h3 { margin:0; color:#2c3e50; font-size:1.2em; }
+  .faq-toggle { font-size:1.5em; color:#4facfe; font-weight:700; transition:transform .3s ease; }
+  .faq-item.active .faq-toggle { transform:rotate(45deg); }
+  .faq-answer { padding:0 25px; max-height:0; overflow:hidden; transition:max-height .3s ease, padding .3s ease; }
+  .faq-item.active .faq-answer { max-height:200px; padding:25px; }
+  .faq-answer p { margin:0; color:#666; line-height:1.6; }
+
+  footer { background:#2c3e50!important; color:#fff; text-align:center; padding:40px 0 100px; margin-top:0; width:100%; }
+
+  .parent-highlight { background:linear-gradient(135deg,#ffe7cc 0%,#ffd4a3 100%); padding:30px; border-radius:20px; margin:40px 0; text-align:center; box-shadow:0 8px 25px rgba(255,149,0,.15); }
+  .parent-highlight h3 { color:#ff7b00; font-size:1.8em; margin-bottom:15px; }
+  .age-badge { display:inline-block; background:rgba(255,255,255,.2); backdrop-filter:blur(10px); padding:8px 18px; border-radius:30px; border:2px solid rgba(255,255,255,.3); font-size:1.1em; font-weight:700; letter-spacing:.08em; }
+
+  /* === ChatGPT 追加: 背景＆キャラ演出・動画スタイル === */
+  .hero { background:url('bg.jpg') center/cover no-repeat !important; }
+  .hero::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.15)); pointer-events:none; }
+  .hero > .container { position:relative; z-index:10; }
+
+  .hero-chars { position:absolute; inset:0; z-index:5; pointer-events:none; }
+  .hero-chars .char { position:absolute; bottom:0; filter:drop-shadow(0 10px 18px rgba(0,0,0,.25)); user-select:none; -webkit-user-drag:none; will-change:transform; }
+  .char-snake{ right:8%;  width:clamp(150px,20vw,320px); animation:bob 5.5s ease-in-out infinite; }
+  .char-boy  { left:25%; width:clamp(150px,20vw,320px); animation:bob 6.2s ease-in-out infinite .5s; }
+  .char-girl { left:6%;  width:clamp(150px,20vw,320px); animation:bob 5s   ease-in-out infinite .2s; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+  @media (max-width:768px){
+    .hero{ min-height:480px; padding-top:80px; padding-bottom:80px; }
+    .char-snake{ left:2%;  width:clamp(100px,30vw,180px); right:auto; }
+    .char-boy  { left:22%; width:clamp(110px,32vw,200px); }
+    .char-girl { right:2%; width:clamp(120px,34vw,220px); left:auto; }
+    .hero h1{ font-size:2.5em; }
+    .courses{ grid-template-columns:1fr; }
+    .instructor-info{ flex-direction:column; text-align:center; }
+  }
+
+  .stars{ color:gold; font-size:1.2em; font-weight:700; }
+
+  .sticky{ position:fixed; bottom:0; left:0; width:100%; background:rgba(255,255,255,.97); backdrop-filter:blur(8px); padding:14px 20px; border-top:2px solid #e5e7eb; display:flex; align-items:center; justify-content:space-between; z-index:10000; box-shadow:0 -8px 24px rgba(2,6,23,.12); }
+  .sticky b{ color:#2c3e50; font-size:1.1em; }
+  .sticky .cta-button{ font-size:1.1em; padding:12px 24px; }
+</style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-chars" aria-hidden="true">
+      <img class="char char-snake" src="snake.png" alt="Pythonくん"/>
+      <img class="char char-boy"   src="boy.png"   alt="男の子キャラ"/>
+      <img class="char char-girl"  src="girl.png"  alt="女の子キャラ"/>
+    </div>
+    <div class="container">
+      <div class="countdown">🎉 今だけ！入会金10,000円が無料</div>
+      <h1>ChatGPTで学ぶ！<br/>小・中学生のためのプログラミング講座</h1>
+      <p>東大卒が監修、"問題解決力"と“質問力”が身につく実践講座。</p>
+      <div style="margin:30px 0;">
+        <div class="age-badge">小学4年生 〜 中学3年生 対象</div>
+      </div>
+      <a class="orange cta-button" href="https://mosh.jp/services/285857">今すぐ申し込む</a>
+    </div>
+  </section>
+
+  <section class="section sample-video">
+    <div class="container">
+      <h2>サンプル動画</h2>
+      <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:16px; box-shadow:0 14px 36px rgba(0,0,0,.25);">
+        <video
+          controls
+          playsinline
+          style="position:absolute; top:0; left:0; width:100%; height:100%;"
+          poster="サムネ.jpg"
+        >
+          <source src="sample.mp4" type="video/mp4">
+          お使いのブラウザは video タグに対応していません。
+        </video>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>ChatGPT×プログラミングで伸びる3つの力</h2>
+      <div class="features">
+        <div class="feature-card"><div class="feature-icon">🤝</div><h3>対話で学ぶ→定着する</h3><p>ChatGPTに「なぜ？」をぶつけ、ヒントをもらい、自力でコードを直す流れを徹底。自走力が養われます。</p></div>
+        <div class="feature-card"><div class="feature-icon">🛠️</div><h3>問題解決力が身につく</h3><p>エラーやバグに直面したとき、自分で原因を考え、修正する力が自然と身につきます。</p></div>
+        <div class="feature-card"><div class="feature-icon">🧠</div><h3>質問力が伸びる</h3><p>良い質問は良い答えを生みます。やりたいことを整理して言葉にする練習を通じて、AIにも人にも伝わる表現力が磨かれます。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>なぜ今、ChatGPTでプログラミング？</h2>
+      <div class="features">
+        <div class="feature-card"><div class="feature-icon">⚡</div><h3>学習スピードが段違い</h3><p>詰まった瞬間に相談できるので、独学よりも速く・深く進めます。</p></div>
+        <div class="feature-card"><div class="feature-icon">🎮</div><h3>作りながら覚える</h3><p>ミニゲーム／Webページ／自動化ツールなど、手を動かす制作中心。完成物が自信になります。</p></div>
+        <div class="feature-card"><div class="feature-icon">🔐</div><h3>安全に配慮</h3><p>ChatGPTを使用する際に、事前に守るべきルールもレクチャーします。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>料金</h2>
+      <div style="text-align:center; margin-bottom:40px;">
+        <div style="background:linear-gradient(135deg,#ff9500 0%,#ff7b00 100%); color:#fff; padding:20px; border-radius:15px; display:inline-block; box-shadow:0 8px 25px rgba(255,149,0,.3);">
+          <h3 style="margin:0; font-size:1.5em;"><s style="opacity:.7;">入会金：10,000円</s> → 今だけ0円！</h3>
+          <p style="margin:10px 0 0 0; font-size:.9em;">オンライン完結。送迎不要・全国対応。</p>
+        </div>
+      </div>
+      <div class="courses">
+        <div class="course-card">
+          <div class="course-header">
+            <h3 style="font-size:1.8em; margin-bottom:10px;">動画（買い切り）</h3>
+            <p>学びの基本となるメイン講座</p>
+          </div>
+          <div class="course-body">
+            <div class="price">9,800円（買い切り）</div>
+            <ul class="course-features">
+              <li>分かりやすいアニメーション解説</li>
+              <li>何度でも繰り返し学習可能</li>
+            </ul>
+            <a class="cta-button" href="https://mosh.jp/services/285857">申し込む</a>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-header">
+            <h3 style="font-size:1.8em; margin-bottom:10px;">個別サポート（オプション）</h3>
+            <p>「動画」で学びながら必要な回だけ追加</p>
+          </div>
+          <div class="course-body">
+            <div class="price">6,800円／回（50分）</div>
+            <ul class="course-features">
+              <li>動画受講者限定のマンツーマン</li>
+              <li>動画だけでは分からない箇所をピンポイントで解決</li>
+            </ul>
+            <a class="cta-button" href="https://mosh.jp/services/288934">申し込む</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- <section class="section">
+    <div class="container">
+      <h2>保護者さまからの声</h2>
+      <div class="testimonials">
+        <div class="testimonial-card"><div class="testimonial-content"><div class="stars">★★★★★</div><p>"ChatGPTに自分で質問して直す習慣がつきました。自由研究のプログラムも完成！"</p></div><div class="testimonial-author"><div class="author-avatar">👩</div><div><h4>小5男子の保護者さま</h4></div></div></div>
+        <div class="testimonial-card"><div class="testimonial-content"><div class="stars">★★★★☆</div><p>"「どう伝えれば伝わるか」を考えるようになり、作文もわかりやすくなりました。"</p></div><div class="testimonial-author"><div class="author-avatar">👨</div><div><h4>中1女子の保護者さま</h4></div></div></div>
+        <div class="testimonial-card"><div class="testimonial-content"><div class="stars">★★★★★</div><p>"エラーが出ても怖がらずに挑戦。キャラクターが可愛く楽しく続けられています。"</p></div><div class="testimonial-author"><div class="author-avatar">👩</div><div><h4>小6男子の保護者さま</h4></div></div></div>
+      </div>
+    </div>
+  </section> -->
+
+  <section class="section">
+    <div class="container">
+      <h2>よくあるご質問</h2>
+      <div class="faq-container">
+        <div class="faq-item">
+          <div class="faq-question"><h3>パソコンは必要ですか？</h3><span class="faq-toggle">+</span></div>
+          <div class="faq-answer"><p>はい、タブレットでも視聴は可能ですが、コード入力はパソコン推奨です。</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question"><h3>小学4年生でも大丈夫？</h3><span class="faq-toggle">+</span></div>
+          <div class="faq-answer"><p>はい、可愛いキャラクターによる物語形式を採用しており、楽しく学べる工夫をしています。多くの小学4年生が楽しく取り組んでいます。</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question"><h3>ChatGPTは有料ですか？</h3><span class="faq-toggle">+</span></div>
+          <div class="faq-answer"><p>いいえ、授業では無料プランで十分に学べます。ただし、必要に応じて上位プランの活用方法もご案内します。</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question"><h3>保護者はAIに詳しくなくても大丈夫？</h3><span class="faq-toggle">+</span></div>
+          <div class="faq-answer"><p>はい、お子さまが詰まってしまいどうしてもわからない場合は、「個別サポート」をお申し込み下さい。マンツーマンで丁寧に指導します。</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div class="container" style="text-align:center;">
+      <a class="orange cta-button" href="https://mosh.jp/services/285857" style="font-size:1.3em; padding:18px 32px;">入会金0円で申し込む</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container"><p>© 2025 ChatGPTで学ぶ！小・中学生のためのプログラミング講座. All rights reserved.</p></div>
+  </footer>
+
+  <div class="sticky">
+    <div><b>お子さまの未来に<br>“つくる力”を。</b></div>
+    <a class="orange cta-button" href="https://mosh.jp/services/285857">お申し込み</a>
+  </div>
+
+  <script>
+    // スムーズスクロール
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor){
+      anchor.addEventListener('click', function(e){
+        e.preventDefault();
+        var target = document.querySelector(this.getAttribute('href'));
+        if(target){ target.scrollIntoView({ behavior:'smooth', block:'start' }); }
+      });
+    });
+
+    // カードのフェードイン
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){ if(entry.isIntersecting){ entry.target.style.opacity='1'; entry.target.style.transform='translateY(0)'; } });
+    }, { threshold:0.1, rootMargin:'0px 0px -50px 0px' });
+
+    document.querySelectorAll('.feature-card, .course-card, .testimonial-card').forEach(function(card){
+      card.style.opacity='0'; card.style.transform='translateY(20px)'; card.style.transition='all .6s ease'; observer.observe(card);
+    });
+
+    // FAQ アコーディオン
+    document.querySelectorAll('.faq-question').forEach(function(question){
+      question.addEventListener('click', function(){
+        var item = question.parentElement; var active = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(function(i){ i.classList.remove('active'); });
+        if(!active){ item.classList.add('active'); }
+      });
+    });
+
+    // CTA 近接エフェクト
+    (function(){
+      var THRESHOLD = 200;
+      document.addEventListener('mousemove', function(e){
+        document.querySelectorAll('.cta-button').forEach(function(btn){
+          var rect = btn.getBoundingClientRect();
+          var dx = e.clientX - (rect.left + rect.width/2);
+          var dy = e.clientY - (rect.top + rect.height/2);
+          var distance = Math.sqrt(dx*dx + dy*dy);
+          if(distance < THRESHOLD){
+            btn.classList.add('near');
+            btn.classList.remove('shake-once');
+            void btn.offsetWidth; // reflow
+            btn.classList.add('shake-once');
+          } else {
+            btn.classList.remove('near');
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
